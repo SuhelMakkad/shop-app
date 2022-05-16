@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../screens/products_detail_screen.dart';
+
 class ProductItem extends StatelessWidget {
   const ProductItem({
     Key? key,
@@ -12,35 +14,60 @@ class ProductItem extends StatelessWidget {
   final String title;
   final String imageUrl;
 
+  Widget _buildIconButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    Color color = Colors.white,
+  }) {
+    return IconButton(
+      icon: Icon(
+        icon,
+        color: color,
+        size: 20,
+      ),
+      onPressed: onPressed,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
+      borderRadius: BorderRadius.circular(6),
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.black87,
-          leading: IconButton(
-            icon: Icon(
-              Icons.favorite,
-              color: Theme.of(context).colorScheme.secondary,
-            ),
-            onPressed: () {},
-          ),
           title: Text(
             title,
-            textAlign: TextAlign.center,
-          ),
-          trailing: IconButton(
-            icon: Icon(
-              Icons.shopping_cart,
-              color: Theme.of(context).colorScheme.secondary,
+            style: const TextStyle(
+              fontSize: 15,
             ),
-            onPressed: () {},
+          ),
+          trailing: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              _buildIconButton(
+                icon: Icons.favorite,
+                onPressed: () {},
+                color: Theme.of(context).colorScheme.secondary,
+              ),
+              _buildIconButton(
+                icon: Icons.shopping_cart,
+                onPressed: () {},
+              ),
+            ],
           ),
         ),
-        child: Image.network(
-          imageUrl,
-          fit: BoxFit.cover,
+        child: GestureDetector(
+          onTap: () {
+            Navigator.of(context).pushNamed(
+              ProductDetailScreen.routeName,
+              arguments: id,
+            );
+          },
+          child: Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+          ),
         ),
       ),
     );
