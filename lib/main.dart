@@ -4,7 +4,7 @@ import 'package:provider/provider.dart';
 import './screens/products_overview_screen.dart';
 import './screens/products_detail_screen.dart';
 
-import 'providers/products_provider.dart';
+import 'providers/products.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (ctx) => ProductsProvider(),
+      create: (ctx) => Products(),
       child: MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
           ),
           fontFamily: "Lato",
         ),
-        home: ProductOverviewScreen(),
+        home: const ProductOverviewScreen(),
         routes: {
           ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
         },
