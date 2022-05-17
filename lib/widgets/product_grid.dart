@@ -24,10 +24,10 @@ class ProductsGrid extends StatelessWidget {
       itemCount: products.length,
       itemBuilder: (ctx, index) {
         final product = products[index];
-        return ProductItem(
-          id: product.id,
-          title: product.title,
-          imageUrl: product.imageUrl,
+
+        return ChangeNotifierProvider(
+          create: (c) => product,
+          child: const ProductItem(),
         );
       },
     );

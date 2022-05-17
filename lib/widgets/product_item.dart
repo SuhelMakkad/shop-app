@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
+import '../providers/product.dart';
 import '../screens/products_detail_screen.dart';
 
 class ProductItem extends StatelessWidget {
-  const ProductItem({
-    Key? key,
-    required this.id,
-    required this.title,
-    required this.imageUrl,
-  }) : super(key: key);
-
-  final String id;
-  final String title;
-  final String imageUrl;
+  const ProductItem({Key? key}) : super(key: key);
 
   Widget _buildIconButton({
     required IconData icon,
@@ -31,13 +24,15 @@ class ProductItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final product = Provider.of<Product>(context);
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(6),
       child: GridTile(
         footer: GridTileBar(
           backgroundColor: Colors.black87,
           title: Text(
-            title,
+            product.title,
             style: const TextStyle(
               fontSize: 15,
             ),
@@ -46,8 +41,9 @@ class ProductItem extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               _buildIconButton(
-                icon: Icons.favorite,
-                onPressed: () {},
+                icon:
+                    product.isFavorite ? Icons.favorite : Icons.favorite_border,
+                onPressed: product.toggleFavoriteStatus,
                 color: Theme.of(context).colorScheme.secondary,
               ),
               _buildIconButton(
@@ -61,11 +57,11 @@ class ProductItem extends StatelessWidget {
           onTap: () {
             Navigator.of(context).pushNamed(
               ProductDetailScreen.routeName,
-              arguments: id,
+              arguments: product.id,
             );
           },
           child: Image.network(
-            imageUrl,
+            product.imageUrl,
             fit: BoxFit.cover,
           ),
         ),
