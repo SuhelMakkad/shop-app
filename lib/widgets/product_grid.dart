@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/products.dart';
 
-import '../widgets/product_item.dart';
+import './product_item.dart';
 
 class ProductsGrid extends StatelessWidget {
   const ProductsGrid(this.showFavs, {Key? key}) : super(key: key);
