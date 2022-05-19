@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
 
+import './cart_screen.dart';
 import '../widgets/product_grid.dart';
 import '../widgets/badge.dart';
 
@@ -59,7 +60,9 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
               icon: const Icon(
                 Icons.shopping_cart,
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.of(context).pushNamed(CartScreen.routeName);
+              },
             ),
           ),
         ],

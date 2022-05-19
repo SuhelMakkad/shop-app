@@ -21,6 +21,19 @@ class Cart with ChangeNotifier {
     return {..._items};
   }
 
+  double get totlaAmount {
+    var total = 0.0;
+    _items.forEach((key, value) {
+      total += value.quantity * value.price;
+    });
+
+    return total;
+  }
+
+  int get itemCount {
+    return _items.length;
+  }
+
   void addItem({
     required String productId,
     required double price,
@@ -50,7 +63,8 @@ class Cart with ChangeNotifier {
     notifyListeners();
   }
 
-  int get itemCount {
-    return _items.length;
+  void removeItem(String id) {
+    _items.remove(id);
+    notifyListeners();
   }
 }
