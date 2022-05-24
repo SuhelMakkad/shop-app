@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../screens/orders_screen.dart';
+
 import '../providers/cart.dart' show Cart;
 import '../providers/orders.dart';
 
@@ -77,6 +79,7 @@ class CartScreen extends StatelessWidget {
                       );
 
                       cart.clear();
+                      Navigator.of(context).pushNamed(OrdersScreen.routeName);
                     },
                     child: const Text("ORDER NOW"),
                   ),
