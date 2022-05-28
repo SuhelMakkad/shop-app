@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 class Product with ChangeNotifier {
@@ -38,5 +40,16 @@ class Product with ChangeNotifier {
       imageUrl: imageUrl ?? this.imageUrl,
       isFavorite: isFavorite ?? this.isFavorite,
     );
+  }
+
+  String toJSON(Product product) {
+    return json.encode({
+      'id': product.id,
+      'title': product.title,
+      'description': product.description,
+      'price': product.price,
+      'imageUrl': product.imageUrl,
+      'isFavorite': product.isFavorite,
+    });
   }
 }

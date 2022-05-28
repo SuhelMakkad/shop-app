@@ -1,4 +1,7 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 
 import './product.dart';
 
@@ -38,6 +41,9 @@ class Products with ChangeNotifier {
     ),
   ];
 
+  static const firestoreBaseURL =
+      "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
+
   List<Product> get items {
     return [..._items];
   }
@@ -50,13 +56,19 @@ class Products with ChangeNotifier {
     return _items.firstWhere((item) => item.id == id);
   }
 
-  void addProduct(Product product) {
-    final newProduct = product.copy(
-      id: DateTime.now().toString(),
-    );
-    _items.add(newProduct);
+  Future<void> addProduct(Product product) async {
+    final url = Uri.parse("$firestoreBaseURL/products.json");
+    final response = await http.post(url, body: product.toJSON(product));
 
+    final data = json.decode(response.body);
+    final newProduct = product.copy(
+      id: data["name"],
+    );
+
+    _items.add(newProduct);
     notifyListeners();
+
+    return Future.value();
   }
 
   void updateProduct(Product newProduct) {
