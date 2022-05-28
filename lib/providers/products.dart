@@ -57,8 +57,10 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = Uri.parse("$firestoreBaseURL/products.json");
-    final response = await http.post(url, body: product.toJSON(product));
+    final url = Uri.parse("$firestoreBaseURL/products");
+    final http.Response response;
+
+    response = await http.post(url, body: product.toJSON(product));
 
     final data = json.decode(response.body);
     final newProduct = product.copy(

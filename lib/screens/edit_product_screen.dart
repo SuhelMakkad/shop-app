@@ -67,6 +67,25 @@ class _EditProductScreenState extends State<EditProductScreen> {
     super.dispose();
   }
 
+  Future _showErrorMessage() {
+    return showDialog(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: const Text("Can not add this product"),
+        content: const Text(
+            "Somthing went wrong wile adding the product, please try again after some time"),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(ctx).pop();
+            },
+            child: const Text("okay"),
+          )
+        ],
+      ),
+    );
+  }
+
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
       final value = _imageUrlContoller.text;
@@ -92,10 +111,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
     final productData = Provider.of<Products>(context, listen: false);
 
-    if (_editedProduct.id == '') {
-      await productData.addProduct(_editedProduct);
-    } else {
-      productData.updateProduct(_editedProduct);
+    try {
+      if (_editedProduct.id == '') {
+        await productData.addProduct(_editedProduct);
+      } else {
+        productData.updateProduct(_editedProduct);
+      }
+    } catch (e) {
+      await _showErrorMessage();
     }
 
     if (!mounted) return;
