@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
+import '../providers/products.dart';
 
 class EditProductScreen extends StatefulWidget {
   const EditProductScreen({Key? key}) : super(key: key);
@@ -64,6 +66,12 @@ class _EditProductScreenState extends State<EditProductScreen> {
       return;
     }
     currentState.save();
+
+    final productData = Provider.of<Products>(context, listen: false);
+
+    productData.addProduct(_editedProduct);
+
+    Navigator.of(context).pop();
   }
 
   @override
@@ -180,6 +188,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     margin: const EdgeInsets.only(top: 16),
                     width: double.infinity,
                     height: 150,
+                    decoration: BoxDecoration(
+                      border: Border.all(),
+                    ),
                     child: FadeInImage(
                       placeholder:
                           const AssetImage("assets/images/image-preview.jpg"),
