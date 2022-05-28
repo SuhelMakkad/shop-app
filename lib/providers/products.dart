@@ -51,7 +51,7 @@ class Products with ChangeNotifier {
     final url = Uri.parse("$firestoreBaseURL/products.json");
     final response = await http.post(
       url,
-      body: product.toJSON(product),
+      body: product.toJSON(),
     );
 
     final data = json.decode(response.body);
@@ -63,11 +63,15 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void updateProduct(Product newProduct) {
+  Future<void> updateProduct(Product newProduct) async {
+    final productId = newProduct.id;
     final productIndex =
-        _items.indexWhere((product) => product.id == newProduct.id);
+        _items.indexWhere((product) => product.id == productId);
 
     if (productIndex >= 0) {
+      final url = Uri.parse("$firestoreBaseURL/products/$productId.json");
+      final response = await http.patch(url, body: newProduct.toJSON());
+
       _items[productIndex] = newProduct;
     } else {
       addProduct(newProduct);

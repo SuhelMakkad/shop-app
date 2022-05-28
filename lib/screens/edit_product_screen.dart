@@ -115,17 +115,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
       if (_editedProduct.id == '') {
         await productData.addProduct(_editedProduct);
       } else {
-        productData.updateProduct(_editedProduct);
+        await productData.updateProduct(_editedProduct);
       }
     } catch (e) {
       await _showErrorMessage();
     }
 
+    setState(() {
+      _isLoading = false;
+    });
+
     if (!mounted) return;
     Navigator.of(context).pop();
-    setState(() {
-      _isLoading = true;
-    });
   }
 
   @override

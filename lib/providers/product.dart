@@ -42,14 +42,14 @@ class Product with ChangeNotifier {
     );
   }
 
-  String toJSON(Product product) {
+  String toJSON() {
     return json.encode({
-      'id': product.id,
-      'title': product.title,
-      'description': product.description,
-      'price': product.price,
-      'imageUrl': product.imageUrl,
-      'isFavorite': product.isFavorite,
+      'id': id,
+      'title': title,
+      'description': description,
+      'price': price,
+      'imageUrl': imageUrl,
+      'isFavorite': isFavorite,
     });
   }
 }
