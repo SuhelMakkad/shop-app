@@ -46,12 +46,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
   void _updateImageUrl() {
     if (!_imageUrlFocusNode.hasFocus) {
+      final value = _imageUrlContoller.text;
+
+      if (!value.startsWith("http") && !value.startsWith("https")) {
+        return;
+      }
+
       setState(() {});
     }
   }
 
   void _saveForm() {
-    _form.currentState?.save();
+    final currentState = _form.currentState!;
+    final isValid = currentState.validate();
+
+    if (!isValid) {
+      return;
+    }
+    currentState.save();
   }
 
   @override
@@ -82,6 +94,13 @@ class _EditProductScreenState extends State<EditProductScreen> {
                   onSaved: (value) {
                     _editedProduct = _editedProduct.copy(title: value);
                   },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter a title";
+                    }
+
+                    return null;
+                  },
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Price'),
@@ -95,14 +114,40 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     _editedProduct = _editedProduct.copy(
                         price: double.parse(value as String));
                   },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter a price";
+                    }
+
+                    if (double.tryParse(value) == null) {
+                      return "Please enter valid number";
+                    }
+
+                    if (double.parse(value) <= 0) {
+                      return "Please enter a number greater then zero";
+                    }
+
+                    return null;
+                  },
                 ),
                 TextFormField(
                   maxLines: 3,
-                  decoration: const InputDecoration(labelText: 'Discription'),
+                  decoration: const InputDecoration(labelText: 'Description'),
                   keyboardType: TextInputType.multiline,
                   focusNode: _descriptionFocusNode,
                   onSaved: (value) {
                     _editedProduct = _editedProduct.copy(description: value);
+                  },
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter a description";
+                    }
+
+                    if (value.length < 5) {
+                      return "Description should be at least 5 charates long";
+                    }
+
+                    return null;
                   },
                 ),
                 TextFormField(
@@ -117,6 +162,18 @@ class _EditProductScreenState extends State<EditProductScreen> {
                     _editedProduct = _editedProduct.copy(imageUrl: value);
                   },
                   onFieldSubmitted: (_) => _saveForm(),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return "Please enter an Image URL";
+                    }
+
+                    if (!value.startsWith("http") &&
+                        !value.startsWith("https")) {
+                      return "Please enter a valid URL";
+                    }
+
+                    return null;
+                  },
                 ),
                 if (imageUrl.isNotEmpty)
                   Container(
