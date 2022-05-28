@@ -5,6 +5,8 @@ import 'package:http/http.dart' as http;
 
 import './product.dart';
 
+import '../models/http_exception.dart';
+
 class Products with ChangeNotifier {
   List<Product> _items = [];
 
@@ -70,7 +72,7 @@ class Products with ChangeNotifier {
 
     if (productIndex >= 0) {
       final url = Uri.parse("$firestoreBaseURL/products/$productId.json");
-      final response = await http.patch(url, body: newProduct.toJSON());
+      await http.patch(url, body: newProduct.toJSON());
 
       _items[productIndex] = newProduct;
     } else {
@@ -79,8 +81,23 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  void deleteProduct(String id) {
-    _items.removeWhere((product) => product.id == id);
+  Future<void> deleteProduct(String id) async {
+    final url = Uri.parse("$firestoreBaseURL/products/$id.json");
+    final productIndex = _items.indexWhere((product) => product.id == id);
+
+    if (productIndex < 0) return;
+
+    final product = _items[productIndex];
+    _items.removeAt(productIndex);
     notifyListeners();
+
+    final response = await http.delete(url);
+    final statusCode = response.statusCode;
+
+    if (statusCode >= 400) {
+      _items.insert(productIndex, product);
+      notifyListeners();
+      throw const HttpException("Could not delete this product");
+    }
   }
 }
