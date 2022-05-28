@@ -21,4 +21,21 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
   }
+
+  Product copy({
+    String? id,
+    String? title,
+    String? description,
+    double? price,
+    String? imageUrl,
+    bool? isFavorite,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      imageUrl: imageUrl ?? this.imageUrl,
+      price: price ?? this.price,
+    );
+  }
 }
