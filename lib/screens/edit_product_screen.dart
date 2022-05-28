@@ -14,6 +14,8 @@ class EditProductScreen extends StatefulWidget {
 }
 
 class _EditProductScreenState extends State<EditProductScreen> {
+  var _isInit = true;
+
   final _priceFocusNode = FocusNode();
   final _descriptionFocusNode = FocusNode();
   final _imageUrlFocusNode = FocusNode();
@@ -28,6 +30,24 @@ class _EditProductScreenState extends State<EditProductScreen> {
     imageUrl: '',
     price: 0,
   );
+  var appBarTitle = 'Add Product';
+
+  @override
+  void didChangeDependencies() {
+    if (_isInit) {
+      final productId = ModalRoute.of(context)!.settings.arguments as String?;
+
+      if (productId != null) {
+        final productsData = Provider.of<Products>(context, listen: false);
+
+        _editedProduct = productsData.findById(productId);
+        _imageUrlContoller.text = _editedProduct.imageUrl;
+        appBarTitle = "Edit Product";
+      }
+    }
+    _isInit = false;
+    super.didChangeDependencies();
+  }
 
   @override
   void initState() {
@@ -69,7 +89,11 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
     final productData = Provider.of<Products>(context, listen: false);
 
-    productData.addProduct(_editedProduct);
+    if (_editedProduct.id != '') {
+      productData.updateProduct(_editedProduct);
+    } else {
+      productData.addProduct(_editedProduct);
+    }
 
     Navigator.of(context).pop();
   }
@@ -81,7 +105,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Edit Product"),
+        title: Text(appBarTitle),
         actions: [
           IconButton(onPressed: _saveForm, icon: const Icon(Icons.save)),
         ],
@@ -95,6 +119,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
               children: [
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Title'),
+                  initialValue: _editedProduct.title,
                   textInputAction: TextInputAction.next,
                   onFieldSubmitted: (_) {
                     focusScope.requestFocus(_priceFocusNode);
@@ -112,6 +137,9 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 ),
                 TextFormField(
                   decoration: const InputDecoration(labelText: 'Price'),
+                  initialValue: _editedProduct.price == 0
+                      ? ''
+                      : _editedProduct.price.toString(),
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   focusNode: _priceFocusNode,
@@ -141,6 +169,7 @@ class _EditProductScreenState extends State<EditProductScreen> {
                 TextFormField(
                   maxLines: 3,
                   decoration: const InputDecoration(labelText: 'Description'),
+                  initialValue: _editedProduct.description,
                   keyboardType: TextInputType.multiline,
                   focusNode: _descriptionFocusNode,
                   onSaved: (value) {

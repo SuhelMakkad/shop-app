@@ -34,8 +34,9 @@ class Product with ChangeNotifier {
       id: id ?? this.id,
       title: title ?? this.title,
       description: description ?? this.description,
-      imageUrl: imageUrl ?? this.imageUrl,
       price: price ?? this.price,
+      imageUrl: imageUrl ?? this.imageUrl,
+      isFavorite: isFavorite ?? this.isFavorite,
     );
   }
 }

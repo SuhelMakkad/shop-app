@@ -46,6 +46,10 @@ class Products with ChangeNotifier {
     return _items.where((item) => item.isFavorite).toList();
   }
 
+  Product findById(String id) {
+    return _items.firstWhere((item) => item.id == id);
+  }
+
   void addProduct(Product product) {
     final newProduct = product.copy(
       id: DateTime.now().toString(),
@@ -55,7 +59,15 @@ class Products with ChangeNotifier {
     notifyListeners();
   }
 
-  Product findById(String id) {
-    return _items.firstWhere((item) => item.id == id);
+  void updateProduct(Product newProduct) {
+    final productIndex =
+        _items.indexWhere((product) => product.id == newProduct.id);
+
+    if (productIndex >= 0) {
+      _items[productIndex] = newProduct;
+    } else {
+      addProduct(newProduct);
+    }
+    notifyListeners();
   }
 }
