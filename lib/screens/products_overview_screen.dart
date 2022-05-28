@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/cart.dart';
+import '../providers/products.dart';
 
 import './cart_screen.dart';
 
@@ -23,6 +24,26 @@ class ProductOverviewScreen extends StatefulWidget {
 
 class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavorites = false;
+  var _isInit = false;
+  var _isLoading = false;
+
+  @override
+  void didChangeDependencies() {
+    if (!_isInit) {
+      setState(() {
+        _isLoading = true;
+      });
+      final productsData = Provider.of<Products>(context);
+      productsData.fetchProducts().then((value) {
+        setState(() {
+          _isLoading = false;
+        });
+      });
+    }
+    _isInit = true;
+
+    super.didChangeDependencies();
+  }
 
   void handlePopupItemSelect(PopupMenuOptions value) {
     setState(() {
@@ -70,7 +91,11 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
         ],
       ),
       drawer: const AppDrawer(),
-      body: ProductsGrid(_showOnlyFavorites),
+      body: _isLoading
+          ? const Center(
+              child: CircularProgressIndicator(),
+            )
+          : ProductsGrid(_showOnlyFavorites),
     );
   }
 }
