@@ -44,7 +44,7 @@ class UserProductsScreen extends StatelessWidget {
                   title: item.title,
                   imageUrl: item.imageUrl,
                 ),
-                const Divider(),
+                if (index != providersData.items.length - 1) const Divider(),
               ],
             );
           },
