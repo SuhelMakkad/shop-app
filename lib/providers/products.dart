@@ -28,6 +28,7 @@ class Products with ChangeNotifier {
   Future<void> fetchProducts() async {
     final url = Uri.parse("$firestoreBaseURL/products.json");
     final response = await http.get(url);
+    if (response.body == 'null') return;
 
     final data = json.decode(response.body) as Map<String, dynamic>;
     final List<Product> loadedProducts = [];
