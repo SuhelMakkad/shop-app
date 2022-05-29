@@ -24,8 +24,9 @@ class UserProdcutItem extends StatelessWidget {
     } catch (e) {
       scaffoldMessenger.hideCurrentSnackBar();
       scaffoldMessenger.showSnackBar(
-        const SnackBar(
-          content: Text(
+        SnackBar(
+          backgroundColor: Theme.of(ctx).colorScheme.error,
+          content: const Text(
             "Deleing falied",
             textAlign: TextAlign.center,
           ),

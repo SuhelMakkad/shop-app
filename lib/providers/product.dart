@@ -1,8 +1,14 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
+import '../models/http_exception.dart';
 
 class Product with ChangeNotifier {
+  static const firestoreBaseURL =
+      "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
+
   final String id;
   final String title;
   final String description;
@@ -19,9 +25,33 @@ class Product with ChangeNotifier {
     this.isFavorite = false,
   });
 
-  void toggleFavoriteStatus() {
-    isFavorite = !isFavorite;
+  void _setFavorite(bool falg) {
+    isFavorite = falg;
     notifyListeners();
+  }
+
+  Future<void> toggleFavoriteStatus() async {
+    final prevStatus = isFavorite;
+    _setFavorite(!prevStatus);
+
+    final url = Uri.parse("$firestoreBaseURL/products/$id.json");
+    try {
+      final response = await http.patch(
+        url,
+        body: json.encode({
+          "isFavorite": isFavorite,
+        }),
+      );
+
+      final statusCode = response.statusCode;
+      if (statusCode >= 400) {
+        _setFavorite(prevStatus);
+        throw const HttpException("Could not delete this product");
+      }
+    } catch (e) {
+      _setFavorite(prevStatus);
+      throw const HttpException("Could not delete this product");
+    }
   }
 
   Product copy({
