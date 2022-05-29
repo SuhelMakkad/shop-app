@@ -56,8 +56,8 @@ class Orders with ChangeNotifier {
 
   Future<void> fetchItems() async {
     final url = Uri.parse("$firestoreBaseURL/orders.json");
-
     final response = await http.get(url);
+
     if (response.body == 'null') return;
 
     final data = json.decode(response.body) as Map<String, dynamic>;
