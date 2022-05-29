@@ -15,14 +15,14 @@ class CartItem {
     required this.price,
   });
 
-  String toJSON() {
-    return json.encode({
-      'id': id,
-      'title': title,
-      'quantity': quantity,
-      'price': price,
-    });
-  }
+  String toJSON() => json.encode(toMap());
+
+  Map<String, Object> toMap() => {
+        'id': id,
+        'title': title,
+        'quantity': quantity,
+        'price': price,
+      };
 }
 
 class Cart with ChangeNotifier {

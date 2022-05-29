@@ -33,14 +33,11 @@ class OrderItem {
   }
 
   String toJSON() {
-    print("Before");
-    final productsJson =
-        json.encode(products.map((product) => product.toJSON()).toList());
-    print("After");
-    print(productsJson);
+    final productsList = products.map((product) => product.toMap()).toList();
+
     return json.encode({
       'id': id,
-      'products': productsJson,
+      'products': productsList,
       'amount': amount,
       'dateTime': dateTime.toIso8601String(),
     });

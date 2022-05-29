@@ -69,26 +69,62 @@ class CartScreen extends StatelessWidget {
                     ),
                     backgroundColor: Theme.of(context).colorScheme.primary,
                   ),
-                  TextButton(
-                    onPressed: () {
-                      final ordersProvider =
-                          Provider.of<Orders>(context, listen: false);
-                      ordersProvider.addOrder(
-                        cart.items.values.toList(),
-                        cart.totlaAmount,
-                      );
-
-                      cart.clear();
-                      Navigator.of(context).pushNamed(OrdersScreen.routeName);
-                    },
-                    child: const Text("ORDER NOW"),
-                  ),
+                  OrderButton(cart: cart),
                 ],
               ),
             ),
           ),
         ],
       ),
+    );
+  }
+}
+
+class OrderButton extends StatefulWidget {
+  const OrderButton({
+    Key? key,
+    required this.cart,
+  }) : super(key: key);
+
+  final Cart cart;
+
+  @override
+  State<OrderButton> createState() => _OrderButtonState();
+}
+
+class _OrderButtonState extends State<OrderButton> {
+  var _isLoading = false;
+
+  void _updateLoadingState(bool flag) {
+    setState(() {
+      _isLoading = flag;
+    });
+  }
+
+  Future<void> _handleOrderButtonTap(BuildContext ctx) async {
+    _updateLoadingState(true);
+
+    final ordersProvider = Provider.of<Orders>(ctx, listen: false);
+    await ordersProvider.addOrder(
+      widget.cart.items.values.toList(),
+      widget.cart.totlaAmount,
+    );
+
+    _updateLoadingState(false);
+
+    widget.cart.clear();
+    if (!mounted) return;
+    Navigator.of(ctx).pushNamed(OrdersScreen.routeName);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isButtonDisalbed = (widget.cart.totlaAmount <= 0 || _isLoading);
+    return TextButton(
+      onPressed: isButtonDisalbed ? null : () => _handleOrderButtonTap(context),
+      child: _isLoading
+          ? const CircularProgressIndicator()
+          : const Text("ORDER NOW"),
     );
   }
 }
