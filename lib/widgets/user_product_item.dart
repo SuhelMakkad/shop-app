@@ -16,8 +16,11 @@ class UserProdcutItem extends StatelessWidget {
   final String title;
   final String imageUrl;
 
-  void _deleteProduct(
-      BuildContext ctx, ScaffoldMessengerState scaffoldMessenger) async {
+  void _deleteProduct({
+    required BuildContext ctx,
+    required ScaffoldMessengerState scaffoldMessenger,
+    required ThemeData themeData,
+  }) async {
     try {
       final productsData = Provider.of<Products>(ctx, listen: false);
       await productsData.deleteProduct(id);
@@ -25,7 +28,7 @@ class UserProdcutItem extends StatelessWidget {
       scaffoldMessenger.hideCurrentSnackBar();
       scaffoldMessenger.showSnackBar(
         SnackBar(
-          backgroundColor: Theme.of(ctx).colorScheme.error,
+          backgroundColor: themeData.colorScheme.error,
           content: const Text(
             "Deleing falied",
             textAlign: TextAlign.center,
@@ -61,7 +64,11 @@ class UserProdcutItem extends StatelessWidget {
               color: themeData.colorScheme.primary,
             ),
             IconButton(
-              onPressed: () => _deleteProduct(context, scaffoldMessenger),
+              onPressed: () => _deleteProduct(
+                ctx: context,
+                scaffoldMessenger: scaffoldMessenger,
+                themeData: themeData,
+              ),
               icon: const Icon(Icons.delete),
               color: themeData.colorScheme.error,
             ),

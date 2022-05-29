@@ -82,7 +82,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.parse("$firestoreBaseURL/products/$id.json");
+    final url = Uri.parse("$firestoreBaseURL/products/$id.");
     final productIndex = _items.indexWhere((product) => product.id == id);
 
     if (productIndex < 0) return;
