@@ -1,4 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
+import 'package:http/http.dart' as http;
+
 import './cart.dart';
 
 class OrderItem {
@@ -13,26 +17,66 @@ class OrderItem {
     required this.amount,
     required this.dateTime,
   });
+
+  OrderItem copy({
+    String? id,
+    List<CartItem>? products,
+    double? amount,
+    DateTime? dateTime,
+  }) {
+    return OrderItem(
+      id: id ?? this.id,
+      products: products ?? this.products,
+      amount: amount ?? this.amount,
+      dateTime: dateTime ?? this.dateTime,
+    );
+  }
+
+  String toJSON() {
+    print("Before");
+    final productsJson =
+        json.encode(products.map((product) => product.toJSON()).toList());
+    print("After");
+    print(productsJson);
+    return json.encode({
+      'id': id,
+      'products': productsJson,
+      'amount': amount,
+      'dateTime': dateTime.toIso8601String(),
+    });
+  }
 }
 
 class Orders with ChangeNotifier {
+  static const firestoreBaseURL =
+      "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
+
   final List<OrderItem> _orders = [];
 
   List<OrderItem> get orders {
     return [..._orders];
   }
 
-  void addOrder(List<CartItem> cartProducts, double total) {
-    _orders.insert(
-      0,
-      OrderItem(
-        id: DateTime.now().toString(),
-        products: cartProducts,
-        amount: total,
-        dateTime: DateTime.now(),
-      ),
+  Future<void> addOrder(List<CartItem> cartProducts, double total) async {
+    final orderItem = OrderItem(
+      id: DateTime.now().toString(),
+      products: cartProducts,
+      amount: total,
+      dateTime: DateTime.now(),
     );
 
+    final url = Uri.parse("$firestoreBaseURL/orders.json");
+    final response = await http.post(
+      url,
+      body: orderItem.toJSON(),
+    );
+
+    final data = json.decode(response.body);
+    final newOrderItem = orderItem.copy(
+      id: data["name"],
+    );
+
+    _orders.insert(0, newOrderItem);
     notifyListeners();
   }
 }

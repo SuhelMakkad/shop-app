@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 class CartItem {
@@ -12,6 +14,15 @@ class CartItem {
     required this.quantity,
     required this.price,
   });
+
+  String toJSON() {
+    return json.encode({
+      'id': id,
+      'title': title,
+      'quantity': quantity,
+      'price': price,
+    });
+  }
 }
 
 class Cart with ChangeNotifier {
