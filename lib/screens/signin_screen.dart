@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import '../widgets/input_with_label.dart';
 
+enum AuthMode { signup, login }
+
 class SignInScreen extends StatelessWidget {
   const SignInScreen({Key? key}) : super(key: key);
 
@@ -72,6 +74,21 @@ class SignInScreen extends StatelessWidget {
                     style: TextStyle(fontSize: 18),
                   ),
                 ),
+              ),
+              const SizedBox(height: 24),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text("Don't have an account?"),
+                  const SizedBox(width: 6),
+                  GestureDetector(
+                    onTap: () {},
+                    child: const Text(
+                      "Sign up",
+                      style: TextStyle(decoration: TextDecoration.underline),
+                    ),
+                  ),
+                ],
               )
             ],
           ),
