@@ -29,9 +29,7 @@ class SignInScreen extends StatelessWidget {
                   ),
                 ),
               ),
-              const SizedBox(
-                height: 8,
-              ),
+              const SizedBox(height: 8),
               SizedBox(
                 width: double.infinity,
                 child: Text(
@@ -39,20 +37,42 @@ class SignInScreen extends StatelessWidget {
                   style: textTheme.headline6,
                 ),
               ),
-              const SizedBox(
-                height: 24,
-              ),
+              const SizedBox(height: 24),
               const InputWithLabel(
                 label: "Email",
                 textInputAction: TextInputAction.next,
               ),
-              const SizedBox(
-                height: 12,
-              ),
+              const SizedBox(height: 12),
               const InputWithLabel(
                 label: "Password",
                 isTextHideable: true,
               ),
+              const SizedBox(height: 12),
+              GestureDetector(
+                onTap: () {},
+                child: const SizedBox(
+                  width: double.infinity,
+                  child: Text(
+                    "Forgot password?",
+                    textAlign: TextAlign.end,
+                    // style: textTheme.headline6,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              SizedBox(
+                width: double.infinity,
+                child: ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.all(10),
+                  ),
+                  child: const Text(
+                    "Continue",
+                    style: TextStyle(fontSize: 18),
+                  ),
+                ),
+              )
             ],
           ),
         ),
