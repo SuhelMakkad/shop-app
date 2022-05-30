@@ -5,6 +5,7 @@ import './providers/cart.dart';
 import './providers/products.dart';
 import './providers/orders.dart';
 
+import './screens/signin_screen.dart';
 import './screens/products_overview_screen.dart';
 import './screens/products_detail_screen.dart';
 import './screens/cart_screen.dart';
@@ -42,8 +43,10 @@ class MyApp extends StatelessWidget {
           ),
           fontFamily: "Lato",
         ),
+        home: const SignInScreen(),
         routes: {
-          "/": (ctx) => const ProductOverviewScreen(),
+          ProductOverviewScreen.routeName: (ctx) =>
+              const ProductOverviewScreen(),
           ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
           CartScreen.routeName: (ctx) => const CartScreen(),
           OrdersScreen.routeName: (ctx) => const OrdersScreen(),
