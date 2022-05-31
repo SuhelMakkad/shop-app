@@ -61,7 +61,7 @@ class _SignInScreenState extends State<SignInScreen> {
                   textAlign: TextAlign.start,
                 ),
                 const SizedBox(
-                  height: 24,
+                  height: 36,
                 ),
                 const InputWithLabel(
                   label: "Email",
