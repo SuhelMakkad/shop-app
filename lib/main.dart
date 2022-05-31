@@ -43,7 +43,7 @@ class MyApp extends StatelessWidget {
           ),
           fontFamily: "Lato",
         ),
-        home: const SignInScreen(),
+        home: SignInScreen(),
         routes: {
           ProductOverviewScreen.routeName: (ctx) =>
               const ProductOverviewScreen(),

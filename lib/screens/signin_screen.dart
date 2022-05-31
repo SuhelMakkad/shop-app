@@ -5,11 +5,11 @@ import '../widgets/input_with_label.dart';
 enum AuthMode { signup, login }
 
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({Key? key}) : super(key: key);
+  SignInScreen({Key? key}) : super(key: key);
 
   static const routeName = "/sign-in";
-  final headingText = "!";
-  final subHeadingText = "Sign in to your account";
+
+  AuthMode _authMode = AuthMode.login;
 
   @override
   Widget build(BuildContext context) {
@@ -42,8 +42,8 @@ class SignInScreen extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              subHeadingText,
-              style: textTheme.headline6,
+              "Sign in to your account",
+              style: textTheme.titleMedium,
               textAlign: TextAlign.start,
             ),
             const SizedBox(height: 24),
@@ -62,9 +62,6 @@ class SignInScreen extends StatelessWidget {
               children: [
                 TextButton(
                   onPressed: () {},
-                  style: TextButton.styleFrom(
-                    primary: themeData.colorScheme.secondary,
-                  ),
                   child: const Text(
                     "Forgot password?",
                     textAlign: TextAlign.end,
