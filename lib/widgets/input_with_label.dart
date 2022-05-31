@@ -4,15 +4,21 @@ class InputWithLabel extends StatefulWidget {
   const InputWithLabel({
     required this.label,
     this.textInputAction = TextInputAction.done,
+    this.enabled = true,
     this.allowObscureToggle = false,
     this.obscureText = false,
+    this.validator,
+    this.controller,
     Key? key,
   }) : super(key: key);
 
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
   final String label;
   final TextInputAction textInputAction;
   final bool allowObscureToggle;
   final bool obscureText;
+  final bool enabled;
 
   @override
   State<InputWithLabel> createState() => _InputWithLabelState();
@@ -35,7 +41,6 @@ class _InputWithLabelState extends State<InputWithLabel> {
 
     return SingleChildScrollView(
       child: Container(
-        height: 36,
         decoration: BoxDecoration(
           color: Colors.black.withOpacity(0.08),
           borderRadius: BorderRadius.circular(4),
@@ -44,7 +49,6 @@ class _InputWithLabelState extends State<InputWithLabel> {
             ? const EdgeInsets.only(left: 16)
             : const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             SizedBox(
@@ -59,11 +63,16 @@ class _InputWithLabelState extends State<InputWithLabel> {
             const SizedBox(
               width: 16,
             ),
-            Flexible(
-              child: TextField(
+            Expanded(
+              child: TextFormField(
+                textAlignVertical: TextAlignVertical.center,
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
+                enabled: widget.enabled,
                 obscureText: _obscureText,
-                decoration: null,
                 textInputAction: widget.textInputAction,
+                validator: widget.validator,
               ),
             ),
             if (widget.allowObscureToggle)

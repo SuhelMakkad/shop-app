@@ -16,6 +16,8 @@ class SignInScreen extends StatefulWidget {
 class _SignInScreenState extends State<SignInScreen> {
   AuthMode _authMode = AuthMode.login;
 
+  final _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
@@ -73,22 +75,31 @@ class _SignInScreenState extends State<SignInScreen> {
                 InputWithLabel(
                   label: "Password",
                   obscureText: true,
+                  controller: _passwordController,
                   textInputAction: _authMode == AuthMode.login
                       ? TextInputAction.done
                       : TextInputAction.next,
                 ),
                 if (_authMode == AuthMode.signup)
                   Column(
-                    children: const [
-                      SizedBox(
+                    children: [
+                      const SizedBox(
                         height: 12,
                       ),
                       InputWithLabel(
                         label: "Confirm",
                         obscureText: true,
                         allowObscureToggle: true,
+                        enabled: _authMode == AuthMode.signup,
+                        validator: _authMode == AuthMode.login
+                            ? null
+                            : (value) {
+                                if (value != _passwordController.text) {
+                                  return "Password and Confirm Password do not match!";
+                                }
+                              },
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 12,
                       ),
                     ],
