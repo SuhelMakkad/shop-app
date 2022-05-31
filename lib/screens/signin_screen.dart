@@ -4,11 +4,16 @@ import '../widgets/input_with_label.dart';
 
 enum AuthMode { signup, login }
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
   SignInScreen({Key? key}) : super(key: key);
 
   static const routeName = "/sign-in";
 
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
   AuthMode _authMode = AuthMode.login;
 
   @override
@@ -24,7 +29,9 @@ class SignInScreen extends StatelessWidget {
           children: [
             RichText(
               text: TextSpan(
-                text: "Welcome back",
+                text: _authMode == AuthMode.login
+                    ? "Welcome back"
+                    : "Welcome aboard",
                 style: textTheme.headline4?.copyWith(
                   fontWeight: FontWeight.bold,
                   color: Colors.black,
@@ -40,36 +47,68 @@ class SignInScreen extends StatelessWidget {
                 ],
               ),
             ),
-            const SizedBox(height: 8),
+            const SizedBox(
+              height: 8,
+            ),
             Text(
-              "Sign in to your account",
+              _authMode == AuthMode.login
+                  ? "Sign in to your account"
+                  : "Create a new account",
               style: textTheme.titleMedium,
               textAlign: TextAlign.start,
             ),
-            const SizedBox(height: 24),
+            const SizedBox(
+              height: 24,
+            ),
             const InputWithLabel(
               label: "Email",
               textInputAction: TextInputAction.next,
             ),
-            const SizedBox(height: 12),
-            const InputWithLabel(
+            const SizedBox(
+              height: 12,
+            ),
+            InputWithLabel(
               label: "Password",
-              isTextHideable: true,
+              obscureText: true,
+              textInputAction: _authMode == AuthMode.login
+                  ? TextInputAction.done
+                  : TextInputAction.next,
             ),
-            const SizedBox(height: 2),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Forgot password?",
-                    textAlign: TextAlign.end,
+            if (_authMode == AuthMode.signup)
+              Column(
+                children: const [
+                  SizedBox(
+                    height: 12,
                   ),
-                ),
-              ],
+                  InputWithLabel(
+                    label: "Confirm",
+                    obscureText: true,
+                    allowObscureToggle: true,
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                ],
+              ),
+            const SizedBox(
+              height: 2,
             ),
-            const SizedBox(height: 6),
+            if (_authMode == AuthMode.login)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(
+                    onPressed: () {},
+                    child: const Text(
+                      "Forgot password?",
+                      textAlign: TextAlign.end,
+                    ),
+                  ),
+                ],
+              ),
+            const SizedBox(
+              height: 6,
+            ),
             SizedBox(
               width: double.infinity,
               child: ElevatedButton(
@@ -77,23 +116,36 @@ class SignInScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.all(10),
                 ),
-                child: const Text(
-                  "Continue",
-                  style: TextStyle(fontSize: 18),
+                child: Text(
+                  _authMode == AuthMode.login ? "Continue" : "Create Account",
+                  style: const TextStyle(fontSize: 18),
                 ),
               ),
             ),
-            const SizedBox(height: 6),
+            const SizedBox(
+              height: 6,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Text("Don't have an account?"),
-                const SizedBox(width: 6),
+                Text(
+                  _authMode == AuthMode.login
+                      ? "Don't have an account?"
+                      : "Already have an account?",
+                ),
                 TextButton(
-                  onPressed: () {},
-                  child: const Text(
-                    "Sign up",
-                    style: TextStyle(
+                  onPressed: () {
+                    setState(() {
+                      if (_authMode == AuthMode.login) {
+                        _authMode = AuthMode.signup;
+                      } else {
+                        _authMode = AuthMode.login;
+                      }
+                    });
+                  },
+                  child: Text(
+                    _authMode == AuthMode.login ? "Sign up" : "Login",
+                    style: const TextStyle(
                       decoration: TextDecoration.underline,
                     ),
                   ),

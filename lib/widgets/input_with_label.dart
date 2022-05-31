@@ -4,13 +4,15 @@ class InputWithLabel extends StatefulWidget {
   const InputWithLabel({
     required this.label,
     this.textInputAction = TextInputAction.done,
-    this.isTextHideable = false,
+    this.allowObscureToggle = false,
+    this.obscureText = false,
     Key? key,
   }) : super(key: key);
 
   final String label;
   final TextInputAction textInputAction;
-  final bool isTextHideable;
+  final bool allowObscureToggle;
+  final bool obscureText;
 
   @override
   State<InputWithLabel> createState() => _InputWithLabelState();
@@ -21,7 +23,7 @@ class _InputWithLabelState extends State<InputWithLabel> {
 
   @override
   void initState() {
-    _obscureText = widget.isTextHideable;
+    _obscureText = widget.obscureText;
     super.initState();
   }
 
@@ -38,7 +40,7 @@ class _InputWithLabelState extends State<InputWithLabel> {
           color: Colors.black.withOpacity(0.08),
           borderRadius: BorderRadius.circular(4),
         ),
-        padding: widget.isTextHideable
+        padding: widget.allowObscureToggle
             ? const EdgeInsets.only(left: 16)
             : const EdgeInsets.symmetric(horizontal: 16),
         child: Row(
@@ -64,7 +66,7 @@ class _InputWithLabelState extends State<InputWithLabel> {
                 textInputAction: widget.textInputAction,
               ),
             ),
-            if (widget.isTextHideable)
+            if (widget.allowObscureToggle)
               IconButton(
                 splashRadius: 0.01,
                 onPressed: () {
