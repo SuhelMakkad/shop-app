@@ -9,9 +9,11 @@ class InputWithLabel extends StatefulWidget {
     this.obscureText = false,
     this.validator,
     this.controller,
+    this.onSaved,
     Key? key,
   }) : super(key: key);
 
+  final void Function(String?)? onSaved;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final String label;
@@ -72,7 +74,9 @@ class _InputWithLabelState extends State<InputWithLabel> {
                 enabled: widget.enabled,
                 obscureText: _obscureText,
                 textInputAction: widget.textInputAction,
+                controller: widget.controller,
                 validator: widget.validator,
+                onSaved: widget.onSaved,
               ),
             ),
             if (widget.allowObscureToggle)
