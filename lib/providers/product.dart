@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import '../models/http_exception.dart';
 
 class Product with ChangeNotifier {
-  static const firestoreBaseURL =
+  final _firestoreBaseURL =
       "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
 
   final String id;
@@ -30,11 +30,12 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus() async {
+  Future<void> toggleFavoriteStatus(String authToken) async {
     final prevStatus = isFavorite;
     _setFavorite(!prevStatus);
 
-    final url = Uri.parse("$firestoreBaseURL/products/$id.json");
+    final url =
+        Uri.parse("$_firestoreBaseURL/products/$id.json?auth=$authToken");
     try {
       final response = await http.patch(
         url,

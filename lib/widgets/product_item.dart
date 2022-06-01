@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../providers/product.dart';
 import '../providers/cart.dart';
+import '../providers/auth.dart';
 
 import '../screens/products_detail_screen.dart';
 
@@ -49,7 +50,8 @@ class ProductItem extends StatelessWidget {
 
   Future<void> _toggleFavoriteStatus(BuildContext ctx, Product product) async {
     try {
-      await product.toggleFavoriteStatus();
+      final authToken = Provider.of<Auth>(ctx, listen: false).token;
+      await product.toggleFavoriteStatus(authToken!);
     } catch (e) {
       ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
       ScaffoldMessenger.of(ctx).showSnackBar(
