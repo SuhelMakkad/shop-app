@@ -43,8 +43,6 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {
       _isLoading = false;
     });
-
-    print(_authData);
   }
 
   @override
@@ -108,7 +106,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      print(value);
                       _authData["email"] = value!;
                     },
                   ),
@@ -130,7 +127,6 @@ class _SignInScreenState extends State<SignInScreen> {
                       return null;
                     },
                     onSaved: (value) {
-                      print(value);
                       _authData["password"] = value!;
                     },
                   ),
@@ -148,8 +144,6 @@ class _SignInScreenState extends State<SignInScreen> {
                           validator: _authMode == AuthMode.login
                               ? null
                               : (value) {
-                                  print(value);
-                                  print(_passwordController.text);
                                   if (value != _passwordController.text) {
                                     return "Password and Confirm Password do not match!";
                                   }
