@@ -1,8 +1,9 @@
 import 'dart:convert';
-import 'dart:math';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+
+import '../models/http_exception.dart';
 
 class Auth with ChangeNotifier {
   String? _token;
@@ -19,6 +20,7 @@ class Auth with ChangeNotifier {
   ) async {
     final url = Uri.parse(
         "$_firebaseAuthBaseUrl/v1/accounts:$routeName?key=$_firebaseWebAPIKey");
+
     final response = await http.post(
       url,
       body: json.encode({
@@ -27,7 +29,11 @@ class Auth with ChangeNotifier {
         "returnSecureToken": true,
       }),
     );
-    print(response.body);
+    final data = json.decode(response.body);
+
+    if (data["error"] != null) {
+      throw HttpException(data["error"]["message"]);
+    }
   }
 
   Future<void> signup(String email, String password) async {
