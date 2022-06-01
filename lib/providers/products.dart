@@ -10,7 +10,7 @@ import '../models/http_exception.dart';
 class Products with ChangeNotifier {
   List<Product> _items = [];
 
-  static const firestoreBaseURL =
+  final _firestoreBaseURL =
       "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
 
   List<Product> get items {
@@ -26,7 +26,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> fetchProducts() async {
-    final url = Uri.parse("$firestoreBaseURL/products.json");
+    final url = Uri.parse("$_firestoreBaseURL/products.json");
     final response = await http.get(url);
     if (response.body == 'null') return;
 
@@ -51,7 +51,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> addProduct(Product product) async {
-    final url = Uri.parse("$firestoreBaseURL/products.json");
+    final url = Uri.parse("$_firestoreBaseURL/products.json");
     final response = await http.post(
       url,
       body: product.toJSON(),
@@ -72,7 +72,7 @@ class Products with ChangeNotifier {
         _items.indexWhere((product) => product.id == productId);
 
     if (productIndex >= 0) {
-      final url = Uri.parse("$firestoreBaseURL/products/$productId.json");
+      final url = Uri.parse("$_firestoreBaseURL/products/$productId.json");
       await http.patch(url, body: newProduct.toJSON());
 
       _items[productIndex] = newProduct;
@@ -83,7 +83,7 @@ class Products with ChangeNotifier {
   }
 
   Future<void> deleteProduct(String id) async {
-    final url = Uri.parse("$firestoreBaseURL/products/$id.");
+    final url = Uri.parse("$_firestoreBaseURL/products/$id.");
     final productIndex = _items.indexWhere((product) => product.id == id);
 
     if (productIndex < 0) return;
