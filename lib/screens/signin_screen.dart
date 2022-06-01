@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
 
 import '../widgets/input_with_label.dart';
 
@@ -25,7 +28,7 @@ class _SignInScreenState extends State<SignInScreen> {
 
   AuthMode _authMode = AuthMode.login;
 
-  void _submit() {
+  Future<void> _submit() async {
     final formState = _formKey.currentState!;
     if (!formState.validate()) {
       // Invalid!
@@ -35,10 +38,12 @@ class _SignInScreenState extends State<SignInScreen> {
     setState(() {
       _isLoading = true;
     });
+    final authData = Provider.of<Auth>(context, listen: false);
     if (_authMode == AuthMode.login) {
+      await authData.login(_authData["email"]!, _authData["password"]!);
       // Log user in
     } else {
-      // Sign user up
+      await authData.signup(_authData["email"]!, _authData["password"]!);
     }
     setState(() {
       _isLoading = false;
@@ -120,7 +125,7 @@ class _SignInScreenState extends State<SignInScreen> {
                         ? TextInputAction.done
                         : TextInputAction.next,
                     validator: (value) {
-                      if (value == null || value.isEmpty || value.length < 5) {
+                      if (value == null || value.isEmpty || value.length < 6) {
                         return "Password is too short!";
                       }
 
@@ -180,6 +185,9 @@ class _SignInScreenState extends State<SignInScreen> {
                       onPressed: _submit,
                       style: ElevatedButton.styleFrom(
                         padding: const EdgeInsets.all(10),
+                        primary: themeData.colorScheme.primary.withOpacity(
+                          _isLoading ? 0.5 : 1,
+                        ),
                       ),
                       child: Text(
                         _authMode == AuthMode.login
