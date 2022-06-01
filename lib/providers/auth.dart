@@ -13,6 +13,20 @@ class Auth with ChangeNotifier {
   final _firebaseAuthBaseUrl = "https://identitytoolkit.googleapis.com";
   final _firebaseWebAPIKey = "AIzaSyBuBjTJe4zfYqS8hz0ltuzXLVyxLYY4gN4";
 
+  bool get isAuth {
+    return token != null;
+  }
+
+  String? get token {
+    if (_expiryDate != null &&
+        _expiryDate!.isAfter(DateTime.now()) &&
+        _token != null) {
+      return _token;
+    }
+
+    return null;
+  }
+
   Future<void> _authenticate(
     String email,
     String password,
@@ -34,6 +48,13 @@ class Auth with ChangeNotifier {
     if (data["error"] != null) {
       throw HttpException(data["error"]["message"]);
     }
+
+    _token = data["idToken"];
+    _userId = data["localId"];
+
+    final expiresIn = int.parse(data["expiresIn"]);
+    _expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
+    notifyListeners();
   }
 
   Future<void> signup(String email, String password) async {

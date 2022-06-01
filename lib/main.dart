@@ -38,25 +38,26 @@ class MyApp extends StatelessWidget {
           create: (ctx) => Orders(),
         ),
       ],
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSwatch(
-            primarySwatch: Colors.purple,
-            accentColor: Colors.deepOrange,
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+          title: 'Flutter Demo',
+          theme: ThemeData(
+            colorScheme: ColorScheme.fromSwatch(
+              primarySwatch: Colors.purple,
+              accentColor: Colors.deepOrange,
+            ),
+            fontFamily: "Lato",
           ),
-          fontFamily: "Lato",
+          home: auth.isAuth
+              ? const ProductOverviewScreen()
+              : const SignInScreen(),
+          routes: {
+            CartScreen.routeName: (ctx) => const CartScreen(),
+            OrdersScreen.routeName: (ctx) => const OrdersScreen(),
+            UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
+            EditProductScreen.routeName: (ctx) => const EditProductScreen(),
+          },
         ),
-        home: const SignInScreen(),
-        routes: {
-          ProductOverviewScreen.routeName: (ctx) =>
-              const ProductOverviewScreen(),
-          ProductDetailScreen.routeName: (ctx) => const ProductDetailScreen(),
-          CartScreen.routeName: (ctx) => const CartScreen(),
-          OrdersScreen.routeName: (ctx) => const OrdersScreen(),
-          UserProductsScreen.routeName: (ctx) => const UserProductsScreen(),
-          EditProductScreen.routeName: (ctx) => const EditProductScreen(),
-        },
       ),
     );
   }
