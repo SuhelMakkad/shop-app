@@ -50,8 +50,11 @@ class ProductItem extends StatelessWidget {
 
   Future<void> _toggleFavoriteStatus(BuildContext ctx, Product product) async {
     try {
-      final authToken = Provider.of<Auth>(ctx, listen: false).token;
-      await product.toggleFavoriteStatus(authToken!);
+      final authData = Provider.of<Auth>(ctx, listen: false);
+      final authToken = authData.token;
+      final userId = authData.userId;
+
+      await product.toggleFavoriteStatus(authToken!, userId);
     } catch (e) {
       ScaffoldMessenger.of(ctx).hideCurrentSnackBar();
       ScaffoldMessenger.of(ctx).showSnackBar(

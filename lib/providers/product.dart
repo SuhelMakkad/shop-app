@@ -30,18 +30,16 @@ class Product with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> toggleFavoriteStatus(String authToken) async {
+  Future<void> toggleFavoriteStatus(String authToken, String userId) async {
     final prevStatus = isFavorite;
     _setFavorite(!prevStatus);
 
-    final url =
-        Uri.parse("$_firestoreBaseURL/products/$id.json?auth=$authToken");
+    final url = Uri.parse(
+        "$_firestoreBaseURL/userFavorites/$userId/$id.json?auth=$authToken");
     try {
-      final response = await http.patch(
+      final response = await http.put(
         url,
-        body: json.encode({
-          "isFavorite": isFavorite,
-        }),
+        body: json.encode(isFavorite),
       );
 
       final statusCode = response.statusCode;

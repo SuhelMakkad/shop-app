@@ -8,12 +8,13 @@ import './product.dart';
 import '../models/http_exception.dart';
 
 class Products with ChangeNotifier {
-  Products(this._authToken, this._items);
+  Products(this._authToken, this._userId, this._items);
 
   final _firestoreBaseURL =
       "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
 
-  String? _authToken;
+  final String? _authToken;
+  final String? _userId;
 
   List<Product> _items = [];
 
@@ -31,10 +32,16 @@ class Products with ChangeNotifier {
 
   Future<void> fetchProducts() async {
     final url = Uri.parse("$_firestoreBaseURL/products.json?auth=$_authToken");
-    final response = await http.get(url);
-    if (response.body == 'null') return;
+    final productsResponse = await http.get(url);
 
-    final data = json.decode(response.body) as Map<String, dynamic>;
+    if (productsResponse.body == 'null') return;
+
+    final userFavoritesUrl = Uri.parse(
+        "$_firestoreBaseURL/userFavorites/$_userId.json?auth=$_authToken");
+    final userFavoritesResopnse = await http.get(userFavoritesUrl);
+    final userFavoritesDate = json.decode(userFavoritesResopnse.body);
+
+    final data = json.decode(productsResponse.body) as Map<String, dynamic>;
     final List<Product> loadedProducts = [];
 
     data.forEach((key, value) {
@@ -44,7 +51,8 @@ class Products with ChangeNotifier {
         description: value["description"],
         imageUrl: value["imageUrl"],
         price: value["price"],
-        isFavorite: value["isFavorite"],
+        isFavorite:
+            userFavoritesDate == null ? false : userFavoritesDate[key] ?? false,
       );
 
       loadedProducts.add(product);
