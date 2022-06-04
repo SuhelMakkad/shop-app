@@ -45,12 +45,13 @@ class OrderItem {
 }
 
 class Orders with ChangeNotifier {
-  Orders(this.authToken, this._orders);
+  Orders(this.authToken, this.userId, this._orders);
 
   final _firestoreBaseURL =
       "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
 
   final String? authToken;
+  final String? userId;
 
   List<OrderItem> _orders = [];
 
@@ -59,7 +60,8 @@ class Orders with ChangeNotifier {
   }
 
   Future<void> fetchItems() async {
-    final url = Uri.parse("$_firestoreBaseURL/orders.json?auth=$authToken");
+    final url =
+        Uri.parse("$_firestoreBaseURL/orders/$userId.json?auth=$authToken");
     final response = await http.get(url);
 
     if (response.body == 'null') return;
@@ -100,7 +102,8 @@ class Orders with ChangeNotifier {
       dateTime: DateTime.now(),
     );
 
-    final url = Uri.parse("$_firestoreBaseURL/orders.json?auth=$authToken");
+    final url =
+        Uri.parse("$_firestoreBaseURL/orders/$userId.json?auth=$authToken");
     final response = await http.post(
       url,
       body: orderItem.toJSON(),

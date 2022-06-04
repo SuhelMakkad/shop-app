@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../providers/auth.dart';
 
 import '../screens/orders_screen.dart';
 import '../screens/user_products_screen.dart';
@@ -7,10 +10,9 @@ class AppDrawer extends StatelessWidget {
   const AppDrawer({Key? key}) : super(key: key);
 
   Widget _buildListItem({
-    required BuildContext ctx,
     required String title,
     required IconData icon,
-    required String routeName,
+    required void Function()? onTap,
   }) {
     return ListTile(
       leading: Icon(icon),
@@ -18,9 +20,7 @@ class AppDrawer extends StatelessWidget {
         title,
         style: const TextStyle(fontSize: 16),
       ),
-      onTap: () {
-        Navigator.of(ctx).pushReplacementNamed(routeName);
-      },
+      onTap: onTap,
     );
   }
 
@@ -43,22 +43,36 @@ class AppDrawer extends StatelessWidget {
             ),
           ),
           _buildListItem(
-            ctx: context,
             title: "Shop",
             icon: Icons.shop,
-            routeName: "/",
+            onTap: () {
+              Navigator.of(context).pushReplacementNamed("/");
+            },
           ),
           _buildListItem(
-            ctx: context,
             title: "Orders",
             icon: Icons.payments,
-            routeName: OrdersScreen.routeName,
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(OrdersScreen.routeName);
+            },
           ),
           _buildListItem(
-            ctx: context,
             icon: Icons.edit,
             title: "Manage Products",
-            routeName: UserProductsScreen.routeName,
+            onTap: () {
+              Navigator.of(context)
+                  .pushReplacementNamed(UserProductsScreen.routeName);
+            },
+          ),
+          _buildListItem(
+            icon: Icons.exit_to_app,
+            title: "Log Out",
+            onTap: () {
+              Navigator.of(context).pop();
+              final authData = Provider.of<Auth>(context, listen: false);
+              authData.logout();
+            },
           ),
         ],
       ),
