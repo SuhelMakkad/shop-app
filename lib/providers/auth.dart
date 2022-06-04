@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
@@ -9,6 +10,7 @@ class Auth with ChangeNotifier {
   String? _token;
   DateTime? _expiryDate;
   String? _userId;
+  Timer? _authTimer;
 
   final _firebaseAuthBaseUrl = "https://identitytoolkit.googleapis.com";
   final _firebaseWebAPIKey = "AIzaSyBuBjTJe4zfYqS8hz0ltuzXLVyxLYY4gN4";
@@ -58,6 +60,8 @@ class Auth with ChangeNotifier {
 
     final expiresIn = int.parse(data["expiresIn"]);
     _expiryDate = DateTime.now().add(Duration(seconds: expiresIn));
+
+    _autoLogout();
     notifyListeners();
   }
 
@@ -73,7 +77,23 @@ class Auth with ChangeNotifier {
     _token = null;
     _expiryDate = null;
     _userId = null;
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+    }
 
     notifyListeners();
+  }
+
+  void _autoLogout() {
+    if (_authTimer != null) {
+      _authTimer!.cancel();
+    }
+
+    final timeTilExpire = _expiryDate!.difference(DateTime.now()).inSeconds;
+
+    _authTimer = Timer(
+      Duration(seconds: timeTilExpire),
+      logout,
+    );
   }
 }
