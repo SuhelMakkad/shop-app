@@ -25,13 +25,14 @@ class _EditProductScreenState extends State<EditProductScreen> {
   final _form = GlobalKey<FormState>();
 
   var _editedProduct = Product(
-    id: '',
-    title: '',
-    description: '',
-    imageUrl: '',
+    id: "",
+    title: "",
+    description: "",
+    imageUrl: "",
     price: 0,
+    ownerId: "",
   );
-  var appBarTitle = 'Add Product';
+  var appBarTitle = "Add Product";
 
   @override
   void didChangeDependencies() {

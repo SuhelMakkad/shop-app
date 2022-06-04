@@ -11,7 +11,7 @@ class Products with ChangeNotifier {
   Products(this._authToken, this._userId, this._items);
 
   final _firestoreBaseURL =
-      "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com/";
+      "https://flutter-shop-app-8d10f-default-rtdb.firebaseio.com";
 
   final String? _authToken;
   final String? _userId;
@@ -30,8 +30,11 @@ class Products with ChangeNotifier {
     return _items.firstWhere((item) => item.id == id);
   }
 
-  Future<void> fetchProducts() async {
-    final url = Uri.parse("$_firestoreBaseURL/products.json?auth=$_authToken");
+  Future<void> fetchProducts([bool filterByUser = false]) async {
+    final filterQuery =
+        filterByUser ? '&orderBy="ownerId"&equalTo="$_userId"' : '';
+    final url = Uri.parse(
+        '$_firestoreBaseURL/products.json?auth=$_authToken$filterQuery');
     final productsResponse = await http.get(url);
 
     if (productsResponse.body == 'null') return;
@@ -45,14 +48,17 @@ class Products with ChangeNotifier {
     final List<Product> loadedProducts = [];
 
     data.forEach((key, value) {
+      final isFavorite =
+          userFavoritesDate == null ? false : userFavoritesDate[key] ?? false;
+
       final product = Product(
         id: key,
         title: value["title"],
         description: value["description"],
         imageUrl: value["imageUrl"],
         price: value["price"],
-        isFavorite:
-            userFavoritesDate == null ? false : userFavoritesDate[key] ?? false,
+        ownerId: value["ownerId"],
+        isFavorite: isFavorite,
       );
 
       loadedProducts.add(product);
@@ -66,7 +72,7 @@ class Products with ChangeNotifier {
     final url = Uri.parse("$_firestoreBaseURL/products.json?auth=$_authToken");
     final response = await http.post(
       url,
-      body: product.toJSON(),
+      body: product.copy(ownerId: _userId).toJSON(),
     );
 
     final data = json.decode(response.body);

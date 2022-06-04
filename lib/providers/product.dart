@@ -14,6 +14,7 @@ class Product with ChangeNotifier {
   final String description;
   final double price;
   final String imageUrl;
+  final String ownerId;
   bool isFavorite;
 
   Product({
@@ -22,6 +23,7 @@ class Product with ChangeNotifier {
     required this.description,
     required this.imageUrl,
     required this.price,
+    required this.ownerId,
     this.isFavorite = false,
   });
 
@@ -59,6 +61,7 @@ class Product with ChangeNotifier {
     String? description,
     double? price,
     String? imageUrl,
+    String? ownerId,
     bool? isFavorite,
   }) {
     return Product(
@@ -68,6 +71,7 @@ class Product with ChangeNotifier {
       price: price ?? this.price,
       imageUrl: imageUrl ?? this.imageUrl,
       isFavorite: isFavorite ?? this.isFavorite,
+      ownerId: ownerId ?? this.ownerId,
     );
   }
 
@@ -79,6 +83,6 @@ class Product with ChangeNotifier {
         'description': description,
         'price': price,
         'imageUrl': imageUrl,
-        'isFavorite': isFavorite,
+        'ownerId': ownerId,
       };
 }

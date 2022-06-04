@@ -15,13 +15,11 @@ class UserProductsScreen extends StatelessWidget {
 
   Future<void> _refreshProducts(BuildContext ctx) {
     final providersData = Provider.of<Products>(ctx, listen: false);
-    return providersData.fetchProducts();
+    return providersData.fetchProducts(true);
   }
 
   @override
   Widget build(BuildContext context) {
-    final providersData = Provider.of<Products>(context);
-
     return Scaffold(
       appBar: AppBar(
         title: const Text("Your Products"),
@@ -35,28 +33,43 @@ class UserProductsScreen extends StatelessWidget {
         ],
       ),
       drawer: const AppDrawer(),
-      body: RefreshIndicator(
-        color: Theme.of(context).colorScheme.secondary,
-        onRefresh: () => _refreshProducts(context),
-        child: ListView.builder(
-          itemCount: providersData.items.length,
-          itemBuilder: (_, index) {
-            final item = providersData.items[index];
+      body: FutureBuilder(
+        future: _refreshProducts(context),
+        builder: (context, snapshot) {
+          final isWating = snapshot.connectionState == ConnectionState.waiting;
 
-            return Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(
-                children: [
-                  UserProdcutItem(
-                    id: item.id,
-                    title: item.title,
-                    imageUrl: item.imageUrl,
-                  ),
-                ],
-              ),
+          if (isWating) {
+            return const Center(
+              child: CircularProgressIndicator(),
             );
-          },
-        ),
+          }
+
+          return RefreshIndicator(
+            color: Theme.of(context).colorScheme.secondary,
+            onRefresh: () => _refreshProducts(context),
+            child: Consumer<Products>(
+              builder: (ctx, productsData, _) => ListView.builder(
+                itemCount: productsData.items.length,
+                itemBuilder: (_, index) {
+                  final item = productsData.items[index];
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 10),
+                    child: Column(
+                      children: [
+                        UserProdcutItem(
+                          id: item.id,
+                          title: item.title,
+                          imageUrl: item.imageUrl,
+                        ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            ),
+          );
+        },
       ),
     );
   }
