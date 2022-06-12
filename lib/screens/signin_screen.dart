@@ -50,6 +50,9 @@ class _SignInScreenState extends State<SignInScreen> {
 
   Future<void> _submit() async {
     final formState = _formKey.currentState!;
+
+    FocusScope.of(context).unfocus();
+
     if (!formState.validate()) {
       return;
     }
