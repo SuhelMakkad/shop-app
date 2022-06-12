@@ -165,6 +165,7 @@ class _SignInScreenState extends State<SignInScreen> {
                     label: "Password",
                     obscureText: true,
                     controller: _passwordController,
+                    allowObscureToggle: _authMode == AuthMode.login,
                     textInputAction: _authMode == AuthMode.login
                         ? TextInputAction.done
                         : TextInputAction.next,

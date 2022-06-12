@@ -17,7 +17,7 @@ class Auth with ChangeNotifier {
   final _firebaseWebAPIKey = "AIzaSyBuBjTJe4zfYqS8hz0ltuzXLVyxLYY4gN4";
 
   bool get isAuth {
-    return token != null;
+    return _token != null;
   }
 
   String get userId {
@@ -51,12 +51,14 @@ class Auth with ChangeNotifier {
     }
 
     final userData = prefs.getString("userData")!;
-    final userDataParsed = json.decode(userData) as Map<String, Object>;
+    final userDataParsed = json.decode(userData) as Map<String, dynamic>;
+
     return userDataParsed;
   }
 
   Future<bool> tryAutoLogin() async {
     final userData = await _getUseDataFromPrefs();
+
     if (userData == null) {
       return false;
     }
@@ -69,6 +71,7 @@ class Auth with ChangeNotifier {
 
     _token = userData["authToken"] as String;
     _userId = userData["userId"] as String;
+    _expiryDate = expiryDate;
 
     notifyListeners();
 
