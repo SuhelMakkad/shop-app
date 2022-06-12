@@ -15,6 +15,8 @@ import './screens/orders_screen.dart';
 import './screens/user_products_screen.dart';
 import './screens/edit_product_screen.dart';
 
+import '../helpers/custom_route.dart';
+
 void main() {
   runApp(const MyApp());
 }
@@ -54,6 +56,11 @@ class MyApp extends StatelessWidget {
               accentColor: Colors.deepOrange,
             ),
             fontFamily: "Lato",
+            pageTransitionsTheme: const PageTransitionsTheme(
+              builders: {
+                TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
+              },
+            ),
           ),
           home: auth.isAuth
               ? const ProductOverviewScreen()
