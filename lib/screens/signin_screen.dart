@@ -237,11 +237,25 @@ class _SignInScreenState extends State<SignInScreen> {
                           _isLoading ? 0.5 : 1,
                         ),
                       ),
-                      child: Text(
-                        _authMode == AuthMode.login
-                            ? "Continue"
-                            : "Create Account",
-                        style: const TextStyle(fontSize: 18),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            _authMode == AuthMode.login
+                                ? "Continue"
+                                : "Create Account",
+                            style: const TextStyle(fontSize: 18),
+                          ),
+                          const SizedBox(
+                            width: 10,
+                          ),
+                          if (_isLoading)
+                            const SizedBox(
+                              height: 15,
+                              width: 15,
+                              child: CircularProgressIndicator(),
+                            ),
+                        ],
                       ),
                     ),
                   ),
