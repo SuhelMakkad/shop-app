@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:async';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -146,8 +147,6 @@ class Auth with ChangeNotifier {
 
   Future<void> _clearAuthPrefs() async {
     final prefs = await SharedPreferences.getInstance();
-    prefs.remove("authToken");
-    prefs.remove("userId");
-    prefs.remove("expiryDate");
+    prefs.remove("userData");
   }
 }
