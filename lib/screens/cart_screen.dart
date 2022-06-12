@@ -123,7 +123,11 @@ class _OrderButtonState extends State<OrderButton> {
     return TextButton(
       onPressed: isButtonDisalbed ? null : () => _handleOrderButtonTap(context),
       child: _isLoading
-          ? const CircularProgressIndicator()
+          ? const SizedBox(
+              width: 20,
+              height: 20,
+              child: CircularProgressIndicator(),
+            )
           : const Text("ORDER NOW"),
     );
   }
