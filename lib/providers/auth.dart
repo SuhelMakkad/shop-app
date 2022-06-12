@@ -127,6 +127,7 @@ class Auth with ChangeNotifier {
       _authTimer!.cancel();
     }
 
+    _clearAuthPrefs();
     notifyListeners();
   }
 
@@ -141,5 +142,12 @@ class Auth with ChangeNotifier {
       Duration(seconds: timeTilExpire),
       logout,
     );
+  }
+
+  Future<void> _clearAuthPrefs() async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.remove("authToken");
+    prefs.remove("userId");
+    prefs.remove("expiryDate");
   }
 }

@@ -26,23 +26,33 @@ class _ProductOverviewScreenState extends State<ProductOverviewScreen> {
   var _showOnlyFavorites = false;
   var _isInit = false;
   var _isLoading = false;
+  var _isDisposed = false;
 
   @override
   void didChangeDependencies() {
-    if (!_isInit) {
+    if (!_isInit && !_isDisposed) {
       setState(() {
         _isLoading = true;
       });
-      final productsData = Provider.of<Products>(context);
+      final productsData = Provider.of<Products>(context, listen: false);
       productsData.fetchProducts().then((value) {
-        setState(() {
-          _isLoading = false;
-        });
+        if (!_isDisposed) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       });
     }
     _isInit = true;
 
     super.didChangeDependencies();
+  }
+
+  @override
+  void dispose() {
+    _isDisposed = true;
+
+    super.dispose();
   }
 
   void handlePopupItemSelect(PopupMenuOptions value) {
